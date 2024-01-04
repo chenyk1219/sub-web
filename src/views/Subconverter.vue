@@ -5,7 +5,7 @@
         <el-card>
           <div slot="header">
             <svg-icon icon-class="logo"></svg-icon>
-            运愁维卧
+            sub-web
             <!--            <svg-icon icon-class="github" style="margin-left: 20px" @click="goToProject"/>-->
 
             <div style="display: inline-block; position:absolute; right: 20px">{{ backendVersion }}</div>
@@ -280,8 +280,7 @@ export default {
           "自动判断客户端": "auto",
         },
         customBackend: {
-          "本站后端": "https://api-subconverter.inextops.com/sub?",
-          "本地后端": "http://127.0.0.1/sub?",
+          "本地后端": "http://127.0.0.1:25500/sub?",
         },
         remoteConfig: [
           {
@@ -519,7 +518,7 @@ export default {
       form: {
         sourceSubUrl: "",
         clientType: "",
-        customBackend: "https://api-subconverter.inextops.com",
+        customBackend: "http://127.0.0.1:25500",
         // customBackend: this.getUrlParam(),
         shortType: "",
         remoteConfig: "config/CHENYK_SURGE.ini",
@@ -558,7 +557,7 @@ export default {
       form2: {
         sourceSubUrl: "",
         clientType: "",
-        customBackend: this.getUrlParam() ? this.getUrlParam() : "https://api-subconverter.inextops.com/sub?",
+        customBackend: this.getUrlParam() ? this.getUrlParam() : "http://127.0.0.1:25500/sub?",
         remoteConfig: "",
         excludeRemarks: "",
         includeRemarks: "",
@@ -603,7 +602,7 @@ export default {
     };
   },
   created() {
-    document.title = "运愁维卧";
+    document.title = "sub-web";
     this.isPC = this.$getOS().isPc;
 
     // 获取 url cache
@@ -1041,7 +1040,7 @@ export default {
       this.$axios
           .get(
               // defaultBackend.substring(0, defaultBackend.length - 5) + "/version"
-              "https://api-subconverter.inextops.com/version"
+              "http://127.0.0.1:25500/version"
           )
           .then(res => {
             this.backendVersion = res.data.replace(/backend\n$/gm, "");
