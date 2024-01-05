@@ -5,12 +5,14 @@
         <el-card>
           <div slot="header">
             <svg-icon icon-class="logo"></svg-icon>
-            sub-web
-            <!--            <svg-icon icon-class="github" style="margin-left: 20px" @click="goToProject"/>-->
+            订阅转换器
+            <svg-icon icon-class="github" style="margin-left: 20px" @click="goToProject"/>
 
             <div style="display: inline-block; position:absolute; right: 20px">{{ backendVersion }}</div>
           </div>
-<!--          <p style="color: red">各种订阅链接生成纯前端实现，无隐私问题。默认提供后端转换服务。短链接服务是调用外网生成的，有隐私忧患，现禁用</p>-->
+          <p style="color: red">各种订阅链接生成纯前端实现，无隐私问题。短链接服务是调用外网生成的，有隐私忧患，现禁用</p>
+          <p> 使用指导文档：<a href="https://www.inextops.com/tools/sub/" target="_blank">https://www.inextops.com/tools/sub/</a>
+          </p>
           <hr>
           <br>
           <el-container>
@@ -37,16 +39,16 @@
                 <!--                </el-form-item>-->
                 <el-form-item label="后端地址:">
                   <el-input v-model="form.customBackend" rows="3"
-                          />
-<!--                  <el-select
-                      v-model="form.customBackend"
-                      allow-create
-                      filterable
-                      placeholder="可输入自己的后端"
-                      style="width: 100%"
-                  >
-                    <el-option v-for="(v, k) in options.customBackend" :key="k" :label="k" :value="v"></el-option>
-                  </el-select>-->
+                  />
+                  <!--                  <el-select
+                                        v-model="form.customBackend"
+                                        allow-create
+                                        filterable
+                                        placeholder="可输入自己的后端"
+                                        style="width: 100%"
+                                    >
+                                      <el-option v-for="(v, k) in options.customBackend" :key="k" :label="k" :value="v"></el-option>
+                                    </el-select>-->
                 </el-form-item>
                 <el-form-item label="远程配置:">
                   <el-select v-model="form.remoteConfig" allow-create filterable placeholder="请选择"
@@ -172,17 +174,20 @@
                 <el-button style="width: 140px" type="danger" @click="makeUrl"
                            :disabled="form.sourceSubUrl.length === 0">生成订阅链接
                 </el-button>
-                <el-button style="width: 140px" type="danger" @click="makeShortUrl" :loading="loading"
-                           :disabled="true">生成短链接
-                </el-button>
+                <!--                <el-button style="width: 140px" type="danger" @click="makeShortUrl" :loading="loading"
+                                           :disabled="true">生成短链接
+                                </el-button>-->
                 <!-- <el-button style="width: 140px" type="primary" @click="surgeInstall" icon="el-icon-connection">一键导入Surge</el-button> -->
               </el-form-item>
 
               <el-form-item label-width="0px" style="text-align: center">
-                <el-button style="width: 140px" type="primary" @click="dialogUploadConfigVisible = true"
-                           icon="el-icon-upload" :loading="loading" :disabled="true">上传配置
-                </el-button>
+                <!--                <el-button style="width: 140px" type="primary" @click="dialogUploadConfigVisible = true"
+                                           icon="el-icon-upload" :loading="loading" :disabled="true">上传配置
+                                </el-button>-->
                 <el-button style="width: 140px" type="primary" @click="clashInstall" icon="el-icon-connection"
+                           :disabled="customSubUrl.length === 0">一键导入 Clash
+                </el-button>
+                <el-button style="width: 140px" type="primary" @click="surgeInstall" icon="el-icon-connection"
                            :disabled="customSubUrl.length === 0">一键导入 Clash
                 </el-button>
               </el-form-item>
@@ -238,7 +243,7 @@
 </template>
 
 <script>
-const project = process.env.VUE_APP_PROJECT
+const project = "https://github.com/chenyk1219/sub-web";
 const remoteConfigSample = process.env.VUE_APP_SUBCONVERTER_REMOTE_CONFIG
 const gayhubRelease = process.env.VUE_APP_BACKEND_RELEASE
 const defaultBackend = process.env.VUE_APP_SUBCONVERTER_DEFAULT_BACKEND + '/sub?'
@@ -291,9 +296,14 @@ export default {
                 value: ""
               },
               {
-                label: "CHENYK_Online，简化分组，优化策略，Github同步，本人自用的配置",
+                label: "CHENYK_SURGE_RELEASE.ini，清爽分组，优化策略，本人自用的配置，正式版本，随大版本发布更新",
                 value:
                     "config/CHENYK_SURGE.ini"
+              },
+              {
+                label: "CHENYK_SURGE_TEST.ini，清爽分组，优化策略，测试版本，Github同步，随时更新",
+                value:
+                    "https://raw.githubusercontent.com/chenyk1219/surge/master/CHENYK_SURGE.ini"
               }
             ]
           },
@@ -602,7 +612,7 @@ export default {
     };
   },
   created() {
-    document.title = "sub-web";
+    document.title = "订阅转换器";
     this.isPC = this.$getOS().isPc;
 
     // 获取 url cache
@@ -661,8 +671,16 @@ export default {
         return false;
       }
 
-      const url = "surge://install-config?url=";
-      window.open(url + this.customSubUrl);
+      const url = "surge:///install-config?url=";
+      // window.open(url + this.customSubUrl);
+      window.open(
+          url +
+          encodeURIComponent(
+              this.curtomShortSubUrl !== ""
+                  ? this.curtomShortSubUrl
+                  : this.customSubUrl
+          )
+      );
     },
     makeUrl2() {
       if (this.form.sourceSubUrl === "" || this.form.clientType === "") {
@@ -884,7 +902,7 @@ export default {
         message: h(
             "i",
             {style: "color: teal"},
-            "各种订阅链接（短链接服务除外）生成纯前端实现，无隐私问题。默认提供后端转换服务，隐私担忧者请自行搭建后端服务。"
+            "各种订阅链接（短链接服务除外）生成纯前端实现，无隐私问题。"
         )
       });
     },
