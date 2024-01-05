@@ -188,7 +188,7 @@
                            :disabled="customSubUrl.length === 0">一键导入 Clash
                 </el-button>
                 <el-button style="width: 140px" type="primary" @click="surgeInstall" icon="el-icon-connection"
-                           :disabled="customSubUrl.length === 0">一键导入 Clash
+                           :disabled="customSubUrl.length === 0">一键导入 Surge
                 </el-button>
               </el-form-item>
               <el-form-item label-width="0px" style="text-align: center">
@@ -672,15 +672,15 @@ export default {
       }
 
       const url = "surge:///install-config?url=";
-      // window.open(url + this.customSubUrl);
-      window.open(
+      window.open(url + this.customSubUrl);
+      /*window.open(
           url +
           encodeURIComponent(
               this.curtomShortSubUrl !== ""
                   ? this.curtomShortSubUrl
                   : this.customSubUrl
           )
-      );
+      );*/
     },
     makeUrl2() {
       if (this.form.sourceSubUrl === "" || this.form.clientType === "") {
