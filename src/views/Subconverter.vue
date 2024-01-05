@@ -672,15 +672,15 @@ export default {
       }
 
       const url = "surge:///install-config?url=";
-      window.open(url + this.customSubUrl);
-      /*window.open(
+      // window.open(url + this.customSubUrl);
+      window.open(
           url +
-          encodeURIComponent(
+          (
               this.curtomShortSubUrl !== ""
                   ? this.curtomShortSubUrl
                   : this.customSubUrl
           )
-      );*/
+      );
     },
     makeUrl2() {
       if (this.form.sourceSubUrl === "" || this.form.clientType === "") {
