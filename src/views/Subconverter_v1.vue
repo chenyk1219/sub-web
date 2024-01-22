@@ -32,9 +32,23 @@
               </el-form-item>
 
               <div v-if="advanced === '2'">
+                <!--                <el-form-item label="后端地址:">-->
+                <!--                  <el-autocomplete style="width: 100%" v-model="form.customBackend" :fetch-suggestions="backendSearch"-->
+                <!--                                   placeholder="动动小手，（建议）自行搭建后端服务。例：http://127.0.0.1:25500/sub?">-->
+                <!--                  </el-autocomplete>-->
+                <!--                </el-form-item>-->
                 <el-form-item label="后端地址:">
                   <el-input v-model="form.customBackend" rows="3"
                   />
+                  <!--                  <el-select
+                                        v-model="form.customBackend"
+                                        allow-create
+                                        filterable
+                                        placeholder="可输入自己的后端"
+                                        style="width: 100%"
+                                    >
+                                      <el-option v-for="(v, k) in options.customBackend" :key="k" :label="k" :value="v"></el-option>
+                                    </el-select>-->
                 </el-form-item>
                 <el-form-item label="配置类型">
                   <el-radio v-model="options.configType" label="remote">预制配置（下拉选择）</el-radio>
@@ -69,8 +83,8 @@
                   <el-input v-model="form.interval" placeholder="返用于设置托管配置更新间隔，单位为天"/>
                 </el-form-item>
                 <el-form-item label="一键配置:">
-                  <el-button style="width: 140px" type="primary" @click="setClash">Clash一键配置</el-button>
-                  <el-button style="width: 140px" type="primary" @click="setSurge">Surge一键配置</el-button>
+                  <el-button style="width: 140px" type="primary" >Clash一键配置</el-button>
+                  <el-button style="width: 140px" type="primary" >Surge一键配置</el-button>
                 </el-form-item>
                 <el-form-item label="更多功能:">
                   <el-row :gutter="10">
@@ -171,9 +185,16 @@
                 <el-button style="width: 140px" type="danger" @click="makeUrl"
                            :disabled="form.sourceSubUrl.length === 0">生成订阅链接
                 </el-button>
+                <!--                <el-button style="width: 140px" type="danger" @click="makeShortUrl" :loading="loading"
+                                           :disabled="true">生成短链接
+                                </el-button>-->
+                <!-- <el-button style="width: 140px" type="primary" @click="surgeInstall" icon="el-icon-connection">一键导入Surge</el-button> -->
               </el-form-item>
 
               <el-form-item label-width="0px" style="text-align: center">
+                <!--                <el-button style="width: 140px" type="primary" @click="dialogUploadConfigVisible = true"
+                                           icon="el-icon-upload" :loading="loading" :disabled="true">上传配置
+                                </el-button>-->
                 <el-button style="width: 140px" type="primary" @click="clashInstall" icon="el-icon-connection"
                            :disabled="customSubUrl.length === 0">一键导入 Clash
                 </el-button>
@@ -555,6 +576,37 @@ export default {
           }
         }
       },
+      form2: {
+        sourceSubUrl: "",
+        clientType: "",
+        customBackend: this.getUrlParam() ? this.getUrlParam() : "http://127.0.0.1:25500/sub?",
+        remoteConfig: "",
+        excludeRemarks: "",
+        includeRemarks: "",
+        filename: "",
+        interval: "",
+        emoji: true,
+        nodeList: false,
+        extraset: false,
+        sort: false,
+        udp: false,
+        tfo: false,
+        scv: false,
+        fdn: false,
+        appendType: false,
+        insert: false, // 是否插入默认订阅的节点，对应配置项 insert_url
+        new_name: true, // 是否使用 Clash 新字段
+
+        // tpl 定制功能
+        tpl: {
+          surge: {
+            doh: false // dns 查询是否使用 DoH
+          },
+          clash: {
+            doh: false
+          }
+        }
+      },
 
       loading: false,
       customSubUrl: "",
@@ -586,17 +638,6 @@ export default {
     this.getBackendVersion();
   },
   methods: {
-    setClash() {
-      this.form.new_name = true;
-      this.form.clientType = "clash";
-      this.form.expand = true;
-      this.form.filename = "Clash";
-    },
-    setSurge() {
-      this.form.expand = false;
-      this.form.clientType = "surge-ios&ver=5";
-      this.form.filename = "Surge";
-    },
     getUrlParam() {
       let query = window.location.search.substring(1);
       let vars = query.split('&');
